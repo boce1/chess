@@ -10,6 +10,7 @@ from constants import CELL_WIDHT, BLACK_CELLS_COLOR, WHITE_CELLS_COLOR, WIDTH, H
 import pygame
 from .piece_logic import *
 from .pawn_logic import en_passant
+import os
 
 class Board:
     def __init__(self):
@@ -18,23 +19,26 @@ class Board:
 
         self.initialize()
 
-        self.white_king = pygame.transform.scale(pygame.image.load('.//board_util//pics//white//king.png'), (CELL_WIDHT, CELL_WIDHT))
-        self.black_king = pygame.transform.scale(pygame.image.load('.//board_util//pics//black//king.png'), (CELL_WIDHT, CELL_WIDHT))
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        pics_path = os.path.join(base_path, 'pics')
 
-        self.white_queen = pygame.transform.scale(pygame.image.load('.//board_util//pics//white//queen.png'), (CELL_WIDHT, CELL_WIDHT))
-        self.black_queen = pygame.transform.scale(pygame.image.load('.//board_util//pics//black//queen.png'), (CELL_WIDHT, CELL_WIDHT))
+        self.white_king = pygame.transform.scale(pygame.image.load(os.path.join(pics_path, 'white', 'king.png')), (CELL_WIDHT, CELL_WIDHT))
+        self.black_king = pygame.transform.scale(pygame.image.load((os.path.join(pics_path, 'black', 'king.png'))), (CELL_WIDHT, CELL_WIDHT))
 
-        self.white_knight = pygame.transform.scale(pygame.image.load('.//board_util//pics//white//knight.png'), (CELL_WIDHT, CELL_WIDHT))
-        self.black_knight = pygame.transform.scale(pygame.image.load('.//board_util//pics//black//knight.png'), (CELL_WIDHT, CELL_WIDHT))
+        self.white_queen = pygame.transform.scale(pygame.image.load(os.path.join(pics_path, 'white', 'queen.png')), (CELL_WIDHT, CELL_WIDHT))
+        self.black_queen = pygame.transform.scale(pygame.image.load(os.path.join(pics_path, 'black', 'queen.png')), (CELL_WIDHT, CELL_WIDHT))
 
-        self.white_bishop = pygame.transform.scale(pygame.image.load('.//board_util//pics//white//bishop.png'), (CELL_WIDHT, CELL_WIDHT))
-        self.black_bishop = pygame.transform.scale(pygame.image.load('.//board_util//pics//black//bishop.png'), (CELL_WIDHT, CELL_WIDHT))
+        self.white_knight = pygame.transform.scale(pygame.image.load(os.path.join(pics_path, 'white', 'knight.png')), (CELL_WIDHT, CELL_WIDHT))
+        self.black_knight = pygame.transform.scale(pygame.image.load(os.path.join(pics_path, 'black', 'knight.png')), (CELL_WIDHT, CELL_WIDHT))
 
-        self.white_rook = pygame.transform.scale(pygame.image.load('.//board_util//pics//white//rook.png'), (CELL_WIDHT, CELL_WIDHT))
-        self.black_rook = pygame.transform.scale(pygame.image.load('.//board_util//pics//black//rook.png'), (CELL_WIDHT, CELL_WIDHT))
+        self.white_bishop = pygame.transform.scale(pygame.image.load(os.path.join(pics_path, 'white', 'bishop.png')), (CELL_WIDHT, CELL_WIDHT))
+        self.black_bishop = pygame.transform.scale(pygame.image.load(os.path.join(pics_path, 'black', 'knight.png')), (CELL_WIDHT, CELL_WIDHT))
 
-        self.white_pawn = pygame.transform.scale(pygame.image.load('.//board_util//pics//white//pawn.png'), (CELL_WIDHT, CELL_WIDHT))
-        self.black_pawn = pygame.transform.scale(pygame.image.load('.//board_util//pics//black//pawn.png'), (CELL_WIDHT, CELL_WIDHT))
+        self.white_rook = pygame.transform.scale(pygame.image.load(os.path.join(pics_path, 'white', 'rook.png')), (CELL_WIDHT, CELL_WIDHT))
+        self.black_rook = pygame.transform.scale(pygame.image.load(os.path.join(pics_path, 'black', 'rook.png')), (CELL_WIDHT, CELL_WIDHT))
+
+        self.white_pawn = pygame.transform.scale(pygame.image.load(os.path.join(pics_path, 'white', 'pawn.png')), (CELL_WIDHT, CELL_WIDHT))
+        self.black_pawn = pygame.transform.scale(pygame.image.load(os.path.join(pics_path, 'black', 'pawn.png')), (CELL_WIDHT, CELL_WIDHT))
 
         self.moving_cords = None
 

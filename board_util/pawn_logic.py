@@ -5,7 +5,7 @@ def get_available_moves_pawn(board_state, piece_pos, color):
     if color == 'w':
         if row > 0 and not board_state[row - 1][col]: # move forward one place
             out.append((row - 1, col))
-        if row == 6: # at the beggining
+        if row == 6 and not board_state[row-2][col]: # at the beggining
             out.append((row - 2, col))
 
         if col > 0 and row > 0 and board_state[row-1][col-1]: # taking left
@@ -27,7 +27,7 @@ def get_available_moves_pawn(board_state, piece_pos, color):
     else: # for black pieces
         if row < 7 and not board_state[row + 1][col]: # move forward one place
             out.append((row + 1, col))
-        if row == 1: # at the beggining 
+        if row == 1 and not board_state[row+2][col]: # at the beggining 
             out.append((row + 2, col))
 
         if col > 0 and row < 7 and board_state[row+1][col-1]:  # taking left
