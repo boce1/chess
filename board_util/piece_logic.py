@@ -3,6 +3,7 @@ from .rook_logic import get_available_moves_rook
 from .bishop_logic import get_available_moves_bishop
 from .queen_logic import get_available_moves_queen
 from .knight_logic import get_available_moves_knight
+from .king_logic import get_available_moves_king
 
 def get_available_moves(board_state, piece_pos):
     piece = board_state[piece_pos[0]][piece_pos[1]]
@@ -18,6 +19,8 @@ def get_available_moves(board_state, piece_pos):
             out = get_available_moves_queen(board_state, piece_pos)
         if piece[1] == 'k':
             out = get_available_moves_knight(board_state, piece_pos)
+        if piece[1] == 'K':
+            out = get_available_moves_king(board_state, piece_pos)
 
     return out 
            
