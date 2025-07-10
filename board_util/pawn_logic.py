@@ -59,3 +59,29 @@ def en_passant(board_state, piece_pos):
         else: # for black
             if board_state[row - 1][col] and board_state[row - 1][col][0] == 'w' and board_state[row - 1][col][1] == 'p':
                 board_state[row - 1][col] = None
+
+def can_be_promoted(board_state, piece_pos):
+    '''
+    0 for not promoting
+    1 for white promoting
+    2 for black promoting
+    '''
+    row = piece_pos[0]
+    col = piece_pos[1]
+    piece = board_state[row][col]
+
+    if piece and piece[1] == 'p':
+        if piece[0] == 'w' and row == 0:
+            return 1
+        if piece[0] == 'b' and row == 7:
+            return 2
+    return 0
+
+def get_promotable_pieces(board_state, piece_pos):
+    piece = board_state[piece_pos[0]][piece_pos[1]]
+    if piece and piece[1] == 'p':
+        if piece[0] == 'w':
+            return ('wq', 'wr', 'wk', 'wb')
+        elif piece[0] == 'b':
+            return ('bq', 'br', 'bk', 'bb')
+    return None

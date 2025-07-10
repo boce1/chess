@@ -27,6 +27,7 @@ class Main_window:
                 if event.type == pygame.QUIT:
                     run = False
                 self.board.move_piece(mouse_pos, event)
+                self.board.choose_promoting_piece(mouse_pos, event)
 
             self.draw()
         
