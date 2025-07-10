@@ -62,55 +62,6 @@ class Board:
             ['wr', 'wk', 'wb', 'wq', 'wK','wb', 'wk', 'wr']
         ]
 
-        # pawn testing
-        # self.state = [
-        #     [None for _ in range(8)],
-        #     ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
-        #     [None for _ in range(8)],
-        #     [None for _ in range(8)],
-        #     [None for _ in range(8)],
-        #     [None for _ in range(8)],
-        #     ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
-        #     [None for _ in range(8)],
-        # ]
-
-        # rook testing
-        #self.state = [
-        #    ['br', 'br', 'br', 'bK', 'br','br', 'br', 'br'],
-        #    [None for _ in range(8)],
-        #    [None for _ in range(8)],
-        #    [None for _ in range(8)],
-        #    [None for _ in range(8)],
-        #    [None for _ in range(8)],
-        #    [None for _ in range(8)],
-        #    ['wr', 'wr', 'wr', 'wK', 'wr','wr', 'wr', 'wr'],
-        #]
-
-        # bishop testing
-        #self.state = [
-        #    ['bb', 'bb', 'bb', 'bK', 'bb','bb', 'bb', 'bb'],
-        #    [None for _ in range(8)],
-        #    [None for _ in range(8)],
-        #    [None for _ in range(8)],
-        #    [None for _ in range(8)],
-        #    [None for _ in range(8)],
-        #    [None for _ in range(8)],
-        #    ['wb', 'wb', 'wb', 'wK', 'wb','wb', 'wb', 'wb'],
-        #]
-
-        # queen testing
-        self.state = [
-            ['bq', 'bq', 'bq', 'bK', 'bq','bq', 'bq', 'bq'],
-            [None for _ in range(8)],
-            [None for _ in range(8)],
-            [None for _ in range(8)],
-            [None for _ in range(8)],
-            [None for _ in range(8)],
-            [None for _ in range(8)],
-            ['wq', 'wq', 'wq', 'wK', 'wq','wq', 'wq', 'wq'],
-        ]
-
-
     def draw_frame(self, win):
         for i in range(8):
             for j in range(8):
