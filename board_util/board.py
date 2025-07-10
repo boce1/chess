@@ -6,7 +6,7 @@ piece - p/r/k/b/q/K
 column - a/b/c/d/e/f/g/h
 row - 1/2/3/4/5/6/7/8
 '''
-from constants import CELL_WIDHT, BLACK_CELLS_COLOR, WHITE_CELLS_COLOR, WIDTH, HEIGHT, BLACK, WHITE, AVAILABLE_CELLS_COLOR
+from constants import CELL_WIDHT, BLACK_CELLS_COLOR, WHITE_CELLS_COLOR, WIDTH, HEIGHT, BLACK, WHITE, AVAILABLE_CELLS_COLOR, FRAME_PADDING
 import pygame
 from .piece_logic import *
 from .pawn_logic import *
@@ -63,15 +63,27 @@ class Board:
         ]
 
         # pawn testing
+        # self.state = [
+        #     [None for _ in range(8)],
+        #     ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
+        #     [None for _ in range(8)],
+        #     [None for _ in range(8)],
+        #     [None for _ in range(8)],
+        #     [None for _ in range(8)],
+        #     ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
+        #     [None for _ in range(8)],
+        # ]
+
+        # rook testing
         self.state = [
-            [None for _ in range(8)],
-            ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
-            [None for _ in range(8)],
+            ['br', 'br', 'br', 'bK', 'br','br', 'br', 'br'],
             [None for _ in range(8)],
             [None for _ in range(8)],
             [None for _ in range(8)],
-            ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
             [None for _ in range(8)],
+            [None for _ in range(8)],
+            [None for _ in range(8)],
+            ['wr', 'wr', 'wr', 'wK', 'wr','wr', 'wr', 'wr'],
         ]
 
 
@@ -95,7 +107,8 @@ class Board:
                                                                     CELL_WIDHT, CELL_WIDHT), 3)
                         
 
-        pygame.draw.rect(win, BLACK, (self.start_x, self.start_y, 8*CELL_WIDHT, 8*CELL_WIDHT), 3)
+        pygame.draw.rect(win, BLACK, (self.start_x-FRAME_PADDING, self.start_y-FRAME_PADDING, 
+                                      8*CELL_WIDHT+2*FRAME_PADDING, 8*CELL_WIDHT+2*FRAME_PADDING), 3)
 
     def draw_pieces(self, win):
         for row in range(8):
