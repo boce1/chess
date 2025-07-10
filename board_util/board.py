@@ -6,7 +6,7 @@ piece - p/r/k/b/q/K
 column - a/b/c/d/e/f/g/h
 row - 1/2/3/4/5/6/7/8
 '''
-from constants import CELL_WIDHT, BLACK_CELLS_COLOR, WHITE_CELLS_COLOR, WIDTH, HEIGHT, BLACK, AVAILABLE_CELLS_COLOR, CELL_PROMOTING_WIDTH
+from constants import CELL_WIDHT, BLACK_CELLS_COLOR, WHITE_CELLS_COLOR, WIDTH, HEIGHT, BLACK, WHITE, AVAILABLE_CELLS_COLOR
 import pygame
 from .piece_logic import *
 from .pawn_logic import *
@@ -131,11 +131,14 @@ class Board:
 
     def promoting_choice_rect(self, win):
         if self.promoting == 1:
+            pygame.draw.rect(win, BLACK, (self.x_promoting_rect_white, self.y_promoting_rect[0], CELL_WIDHT, 4*CELL_WIDHT))
             win.blit(self.white_queen, (self.x_promoting_rect_white, self.y_promoting_rect[0]))
             win.blit(self.white_rook, (self.x_promoting_rect_white, self.y_promoting_rect[1]))
             win.blit(self.white_knight, (self.x_promoting_rect_white, self.y_promoting_rect[2]))
             win.blit(self.white_bishop, (self.x_promoting_rect_white, self.y_promoting_rect[3]))
         elif self.promoting == 2:
+            pygame.draw.rect(win, WHITE, (self.x_promoting_rect_black, self.y_promoting_rect[0], CELL_WIDHT, 4*CELL_WIDHT))
+            pygame.draw.rect(win, BLACK, (self.x_promoting_rect_black, self.y_promoting_rect[0], CELL_WIDHT, 4*CELL_WIDHT), 2)
             win.blit(self.black_queen, (self.x_promoting_rect_black, self.y_promoting_rect[0]))
             win.blit(self.black_rook, (self.x_promoting_rect_black, self.y_promoting_rect[1]))
             win.blit(self.black_knight, (self.x_promoting_rect_black, self.y_promoting_rect[2]))
@@ -151,13 +154,11 @@ class Board:
                     self.y_promoting_rect[0] <= y <= self.y_promoting_rect[len(self.y_promoting_rect)-1]+CELL_WIDHT and
                         event.type == pygame.MOUSEBUTTONUP and event.button == 1):
                 index = (y - self.y_promoting_rect[0]) // CELL_WIDHT
-                print(index)
         
         if index != None:
             promoting_pieces = get_promotable_pieces(self.state, self.promoting_cords)
             if promoting_pieces:
                 promoting_piece = promoting_pieces[index]
-                print(promoting_piece)
                 self.state[self.promoting_cords[0]][self.promoting_cords[1]] = promoting_piece
             self.promoting_cords = None
             self.promoting = 0
