@@ -1,7 +1,8 @@
-def get_available_moves_pawn(board_state, piece_pos, color):
+def get_available_moves_pawn(board_state, piece_pos):
     out = []
     row = piece_pos[0]
     col = piece_pos[1]
+    color = board_state[row][col][0]
     if color == 'w':
         if row > 0 and not board_state[row - 1][col]: # move forward one place
             out.append((row - 1, col))

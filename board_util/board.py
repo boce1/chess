@@ -75,15 +75,39 @@ class Board:
         # ]
 
         # rook testing
+        #self.state = [
+        #    ['br', 'br', 'br', 'bK', 'br','br', 'br', 'br'],
+        #    [None for _ in range(8)],
+        #    [None for _ in range(8)],
+        #    [None for _ in range(8)],
+        #    [None for _ in range(8)],
+        #    [None for _ in range(8)],
+        #    [None for _ in range(8)],
+        #    ['wr', 'wr', 'wr', 'wK', 'wr','wr', 'wr', 'wr'],
+        #]
+
+        # bishop testing
+        #self.state = [
+        #    ['bb', 'bb', 'bb', 'bK', 'bb','bb', 'bb', 'bb'],
+        #    [None for _ in range(8)],
+        #    [None for _ in range(8)],
+        #    [None for _ in range(8)],
+        #    [None for _ in range(8)],
+        #    [None for _ in range(8)],
+        #    [None for _ in range(8)],
+        #    ['wb', 'wb', 'wb', 'wK', 'wb','wb', 'wb', 'wb'],
+        #]
+
+        # queen testing
         self.state = [
-            ['br', 'br', 'br', 'bK', 'br','br', 'br', 'br'],
+            ['bq', 'bq', 'bq', 'bK', 'bq','bq', 'bq', 'bq'],
             [None for _ in range(8)],
             [None for _ in range(8)],
             [None for _ in range(8)],
             [None for _ in range(8)],
             [None for _ in range(8)],
             [None for _ in range(8)],
-            ['wr', 'wr', 'wr', 'wK', 'wr','wr', 'wr', 'wr'],
+            ['wq', 'wq', 'wq', 'wK', 'wq','wq', 'wq', 'wq'],
         ]
 
 
@@ -102,9 +126,9 @@ class Board:
                 if self.moving_cords and self.state[self.moving_cords[0]][self.moving_cords[1]]:
                     pygame.draw.rect(win, AVAILABLE_CELLS_COLOR, (self.start_x+self.moving_cords[1]*CELL_WIDHT, self.start_y+self.moving_cords[0]*CELL_WIDHT, CELL_WIDHT, CELL_WIDHT))
                     for cords in get_available_moves(self.state, self.moving_cords):
-                        pygame.draw.rect(win, AVAILABLE_CELLS_COLOR, (self.start_x + cords[1]*CELL_WIDHT, 
-                                                                      self.start_y+ cords[0]*CELL_WIDHT,
-                                                                    CELL_WIDHT, CELL_WIDHT), 3)
+                        pygame.draw.rect(win, AVAILABLE_CELLS_COLOR, (self.start_x + cords[1]*CELL_WIDHT+1, 
+                                                                      self.start_y+ cords[0]*CELL_WIDHT+1,
+                                                                    CELL_WIDHT-2, CELL_WIDHT-2), 2)
                         
 
         pygame.draw.rect(win, BLACK, (self.start_x-FRAME_PADDING, self.start_y-FRAME_PADDING, 

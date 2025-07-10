@@ -1,8 +1,9 @@
-def get_available_moves_rook(board_state, piece_pos, color):
+def get_available_moves_rook(board_state, piece_pos):
     out = []
     row = piece_pos[0]
     col = piece_pos[1]
-
+    color = board_state[row][col][0]
+    
     row_temp = row
     while True: # down direction
         if row_temp >= 7:
