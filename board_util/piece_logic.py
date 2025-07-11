@@ -20,6 +20,8 @@ def get_opp_moves(board_state, piece_pos):
                 if opp_piece == 'p':
                     #moves = get_available_moves_pawn(board_state, pos)
                     moves = get_pawn_taking_moves(board_state, pos)
+                    #if len(moves)> 1:
+                    #    print(opp_piece, board_state[i][j][0], moves)
                 elif opp_piece == 'q':
                     moves = get_available_moves_queen(board_state, pos)
                 elif opp_piece == 'r':
@@ -79,5 +81,19 @@ def get_available_moves(board_state, piece_pos):
                     out_filtered.append(pair)
                 del temp_board
             return out_filtered
+        else:
+            color = piece[0]
+            out_filtered = []
+            for pair in out:
+                temp_board = copy.deepcopy(board_state)
+                temp_piece = temp_board[row][col]
+                temp_board[row][col] = None
+                temp_board[pair[0]][pair[1]] = temp_piece
+
+                if not is_check(temp_board, pair):
+                    out_filtered.append(pair)
+                del temp_board
+            return out_filtered
+
     return out 
            

@@ -64,12 +64,12 @@ class Board:
 
         self.state = [
             [None for _ in range(8)],
+            ['bp', 'bp', 'bp', 'bK', 'bp', 'bp', 'bp', 'bp'],
+            ['br', 'bk', 'bb', 'bq', None,'bb', 'bk', 'br'],
             [None for _ in range(8)],
-            ['br', 'bk', 'bb', 'bq', 'bK','bb', 'bk', 'br'],
             [None for _ in range(8)],
             [None for _ in range(8)],
-            ['wr', 'wk', 'wb', 'wq', 'wK','wb', 'wk', 'wr'],
-            [None for _ in range(8)],
+            ['wp', 'wp', 'wp', 'wK', 'wp', 'wp', 'wp', 'wp'],
             [None for _ in range(8)],
         ]
 

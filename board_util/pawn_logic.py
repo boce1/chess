@@ -6,17 +6,17 @@ def get_pawn_taking_moves(board_state, piece_pos):
 
     if color == 'w':
         if col > 0 and row > 0 and board_state[row-1][col-1]: # taking left
-                if board_state[row-1][col-1][0] == 'b' and board_state[row-1][col-1][1] != 'K': 
-                    out.append((row-1,col-1))
+            if board_state[row-1][col-1][0] == 'b': 
+                out.append((row-1,col-1))
         if col < 7 and row > 0 and board_state[row-1][col+1]: # taking right
-            if board_state[row-1][col+1][0] == 'b' and board_state[row-1][col+1][1] != 'K': 
+            if board_state[row-1][col+1][0] == 'b': 
                 out.append((row-1,col+1))
     else:
         if col > 0 and row < 7 and board_state[row+1][col-1]:  # taking left
-            if board_state[row+1][col-1][0] == 'w' and board_state[row+1][col-1][1] != 'K':
+            if board_state[row+1][col-1][0] == 'w':
                 out.append((row+1,col-1))
         if col < 7 and row < 7 and board_state[row+1][col+1]: # taking right
-            if board_state[row+1][col+1][0] == 'w' and board_state[row+1][col+1][1] != 'K': 
+            if board_state[row+1][col+1][0] == 'w': 
                 out.append((row+1,col+1))
     return out
 
@@ -69,7 +69,12 @@ def get_available_moves_pawn(board_state, piece_pos):
                 if board_state[row][col+1][0] == 'w' and board_state[row][col+1][1] == 'p':
                     out.append((row+1,col+1))
     
-    out.extend(get_pawn_taking_moves(board_state, piece_pos))
+    pawn_taking_lst = get_pawn_taking_moves(board_state, piece_pos)
+    for pair in pawn_taking_lst:
+        if board_state[pair[0]][pair[1]][1] == 'K':
+            pawn_taking_lst.remove(pair)
+
+    out.extend(pawn_taking_lst)
     return out
 
 def en_passant(board_state, piece_pos):
