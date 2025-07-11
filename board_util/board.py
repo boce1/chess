@@ -46,9 +46,12 @@ class Board:
         self.promoting = 0 # 0 for no promoting a pawn, 1 for white promoting, 2 for black promoting
         self.promoting_cords = None
 
+        # first 8 white, second 8 for black
+        self.are_pawns_moved = [False for _ in range(16)]
+
         self.y_promoting_rect = [self.start_y + 2*CELL_WIDHT + i*CELL_WIDHT for i in range(4)]
         self.x_promoting_rect_white = self.start_x + 8*CELL_WIDHT
-        self.x_promoting_rect_black = x = self.start_x - CELL_WIDHT
+        self.x_promoting_rect_black = self.start_x - CELL_WIDHT
 
     def initialize(self):
         self.state = [
@@ -60,17 +63,6 @@ class Board:
             [None for _ in range(8)],
             ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
             ['wr', 'wk', 'wb', 'wq', 'wK','wb', 'wk', 'wr']
-        ]
-
-        self.state = [
-            [None for _ in range(8)],
-            ['bp', 'bp', 'bp', 'bK', 'bp', 'bp', 'bp', 'bp'],
-            ['br', 'bk', 'bb', 'bq', None,'bb', 'bk', 'br'],
-            [None for _ in range(8)],
-            [None for _ in range(8)],
-            [None for _ in range(8)],
-            ['wp', 'wp', 'wp', 'wK', 'wp', 'wp', 'wp', 'wp'],
-            [None for _ in range(8)],
         ]
 
     def draw_frame(self, win):
@@ -87,10 +79,26 @@ class Board:
                 
                 if self.moving_cords and self.state[self.moving_cords[0]][self.moving_cords[1]]:
                     pygame.draw.rect(win, AVAILABLE_CELLS_COLOR, (self.start_x+self.moving_cords[1]*CELL_WIDHT, self.start_y+self.moving_cords[0]*CELL_WIDHT, CELL_WIDHT, CELL_WIDHT))
-                    for cords in get_available_moves(self.state, self.moving_cords):
+                    for cords in get_available_moves(self.state, self.moving_cords, self.are_pawns_moved):
                         pygame.draw.rect(win, AVAILABLE_CELLS_COLOR, (self.start_x + cords[1]*CELL_WIDHT+1, 
-                                                                      self.start_y+ cords[0]*CELL_WIDHT+1,
-                                                                    CELL_WIDHT-2, CELL_WIDHT-2), 2)
+                                                                        self.start_y+ cords[0]*CELL_WIDHT+1,
+                                                                            CELL_WIDHT-2, CELL_WIDHT-2), 2)
+                white_king_pos = find_king_pos(self.state, 'w')
+                if is_check(self.state, white_king_pos):
+                    pygame.draw.rect(win, AVAILABLE_CELLS_COLOR, (self.start_x + white_king_pos[1]*CELL_WIDHT+1, 
+                                                                    self.start_y+ white_king_pos[0]*CELL_WIDHT+1,
+                                                                        CELL_WIDHT-2, CELL_WIDHT-2), 2)
+                    pygame.draw.rect(win, AVAILABLE_CELLS_COLOR, (self.start_x + white_king_pos[1]*CELL_WIDHT+CELL_WIDHT//10, 
+                                                                    self.start_y+ white_king_pos[0]*CELL_WIDHT+CELL_WIDHT//10,
+                                                                        CELL_WIDHT-2*CELL_WIDHT//10, CELL_WIDHT-2*CELL_WIDHT//10))
+                balck_king_pos = find_king_pos(self.state, 'b')
+                if is_check(self.state, balck_king_pos):
+                    pygame.draw.rect(win, AVAILABLE_CELLS_COLOR, (self.start_x + balck_king_pos[1]*CELL_WIDHT+1, 
+                                                                    self.start_y+ balck_king_pos[0]*CELL_WIDHT+1,
+                                                                        CELL_WIDHT-2, CELL_WIDHT-2), 2)
+                    pygame.draw.rect(win, AVAILABLE_CELLS_COLOR, (self.start_x + balck_king_pos[1]*CELL_WIDHT+CELL_WIDHT//10, 
+                                                                    self.start_y+ balck_king_pos[0]*CELL_WIDHT+CELL_WIDHT//10,
+                                                                        CELL_WIDHT-2*CELL_WIDHT//10, CELL_WIDHT-2*CELL_WIDHT//10))
                         
 
         pygame.draw.rect(win, BLACK, (self.start_x-FRAME_PADDING, self.start_y-FRAME_PADDING, 
@@ -180,7 +188,7 @@ class Board:
                         self.promoting != 0): # black's turn but white selected
                         self.moving_cords = None
                 else:
-                    if (row, col) in get_available_moves(self.state, self.moving_cords):
+                    if (row, col) in get_available_moves(self.state, self.moving_cords, self.are_pawns_moved):
                         self.state[row][col] = self.state[self.moving_cords[0]][self.moving_cords[1]]
                         self.state[self.moving_cords[0]][self.moving_cords[1]] = None
                         
@@ -190,6 +198,8 @@ class Board:
                         self.promoting = can_be_promoted(self.state, (row, col))
                         if self.promoting != 0:
                             self.promoting_cords = (row, col)
+
+                        change_state_of_moved_pawns(self.state, self.are_pawns_moved)
 
                     self.moving_cords = None
 

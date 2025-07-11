@@ -20,7 +20,7 @@ def get_pawn_taking_moves(board_state, piece_pos):
                 out.append((row+1,col+1))
     return out
 
-def get_available_moves_pawn(board_state, piece_pos):
+def get_available_moves_pawn(board_state, piece_pos, are_pawns_moved):
     out = []
     row = piece_pos[0]
     col = piece_pos[1]
@@ -31,41 +31,27 @@ def get_available_moves_pawn(board_state, piece_pos):
         if row == 6 and not board_state[row-2][col]: # at the beggining
             out.append((row - 2, col))
 
-        #if col > 0 and row > 0 and board_state[row-1][col-1]: # taking left
-        #    if board_state[row-1][col-1][0] == 'b' and board_state[row-1][col-1][1] != 'K': 
-        #        out.append((row-1,col-1))
-        #if col < 7 and row > 0 and board_state[row-1][col+1]: # taking right
-        #    if board_state[row-1][col+1][0] == 'b' and board_state[row-1][col+1][1] != 'K': 
-        #        out.append((row-1,col+1))
-
         if row == 3: # en passant
-            if col > 0 and board_state[row][col-1]:
+            if col > 0 and board_state[row][col-1] and not are_pawns_moved[col-1]:
                 if board_state[row][col-1][0] == 'b' and board_state[row][col-1][1] == 'p':
                     out.append((row-1,col-1))
             
-            if col < 7 and board_state[row][col+1]:
+            if col < 7 and board_state[row][col+1] and not are_pawns_moved[col+1]:
                 if board_state[row][col+1][0] == 'b' and board_state[row][col+1][1] == 'p':
                     out.append((row-1,col+1))
 
-    else: # for black pieces
+    elif color == 'b' and not are_pawns_moved[8 + col]: # for black pieces
         if row < 7 and not board_state[row + 1][col]: # move forward one place
             out.append((row + 1, col))
         if row == 1 and not board_state[row+2][col]: # at the beggining 
             out.append((row + 2, col))
 
-        #if col > 0 and row < 7 and board_state[row+1][col-1]:  # taking left
-        #    if board_state[row+1][col-1][0] == 'w' and board_state[row+1][col-1][1] != 'K':
-        #        out.append((row+1,col-1))
-        #if col < 7 and row < 7 and board_state[row+1][col+1]: # taking right
-        #    if board_state[row+1][col+1][0] == 'w' and board_state[row+1][col+1][1] != 'K': 
-        #        out.append((row+1,col+1))
-
         if row == 4: # en passant
-            if col > 0 and board_state[row][col-1]:
+            if col > 0 and board_state[row][col-1] and not are_pawns_moved[col-1]:
                 if board_state[row][col-1][0] == 'w' and board_state[row][col-1][1] == 'p':
                     out.append((row+1,col-1))
             
-            if col < 7 and board_state[row][col+1]:
+            if col < 7 and board_state[row][col+1] and not are_pawns_moved[col+1]:
                 if board_state[row][col+1][0] == 'w' and board_state[row][col+1][1] == 'p':
                     out.append((row+1,col+1))
     
@@ -115,3 +101,11 @@ def get_promotable_pieces(board_state, piece_pos):
         elif piece[0] == 'b':
             return ('bq', 'br', 'bk', 'bb')
     return None
+
+def change_state_of_moved_pawns(board_state, are_pawns_moved):
+    for i in range(8):
+        if board_state[2][i] == 'bp':
+            are_pawns_moved[i] = True
+        if board_state[5][i] == 'wp':
+            are_pawns_moved[8 + i] = True
+      

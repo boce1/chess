@@ -1,4 +1,4 @@
-from .pawn_logic import get_available_moves_pawn, get_pawn_taking_moves
+from .pawn_logic import get_available_moves_pawn, get_pawn_taking_moves, change_state_of_moved_pawns
 from .rook_logic import get_available_moves_rook
 from .bishop_logic import get_available_moves_bishop
 from .queen_logic import get_available_moves_queen
@@ -47,14 +47,14 @@ def is_check(board_state, piece_pos):
         raise "The piece is not king!"
 
 
-def get_available_moves(board_state, piece_pos):
+def get_available_moves(board_state, piece_pos, are_pawns_moved):
     row = piece_pos[0]
     col = piece_pos[1]
     piece = board_state[row][col]
     out = []
     if piece:
         if piece[1] == 'p':
-            out = get_available_moves_pawn(board_state, piece_pos)
+            out = get_available_moves_pawn(board_state, piece_pos, are_pawns_moved)
         if piece[1] == 'r':
             out = get_available_moves_rook(board_state, piece_pos)
         if piece[1] == 'b':
