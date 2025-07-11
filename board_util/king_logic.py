@@ -3,29 +3,7 @@ from .knight_logic import get_available_moves_knight
 from .queen_logic import get_available_moves_queen
 from .bishop_logic import get_available_moves_bishop
 from .rook_logic import get_available_moves_rook
-
-def get_pos_where_check(board_state, piece_pos):
-    out = []
-    for i in range(8):
-        for j in range(8):
-            if (board_state[i][j] and 
-                board_state[i][j][0] != board_state[piece_pos[0]][piece_pos[1]][0]):
-                opp_piece = board_state[i][j][1]
-                pos = (i, j)
-                if opp_piece == 'p':
-                    moves = get_available_moves_pawn(board_state, pos)
-                elif opp_piece == 'q':
-                    moves = get_available_moves_queen(board_state, pos)
-                elif opp_piece == 'r':
-                    moves = get_available_moves_rook(board_state, pos)
-                elif opp_piece == 'b':
-                    moves = get_available_moves_bishop(board_state, pos)
-                elif opp_piece == 'k':
-                    moves = get_available_moves_knight(board_state, pos)
-                else:
-                    moves = []
-                out.extend(moves)
-    return out
+from .king_pos import find_king_pos
 
 def get_available_moves_king(board_state, piece_pos):
     out = []
@@ -40,10 +18,11 @@ def get_available_moves_king(board_state, piece_pos):
     out.append((row, col+1))
 
     oposite_king_pos = None
-    for i in range(8):
-        for j in range(8):
-            if board_state[i][j] and board_state[i][j][0] != color and board_state[i][j][1] == 'K':
-                oposite_king_pos = (i, j)
+    if color == 'w':
+        opp_color = 'b'
+    else:
+        opp_color = 'w'
+    oposite_king_pos = find_king_pos(board_state, opp_color)
 
     remove_list = set()
     for pair in out:
@@ -75,5 +54,4 @@ def get_available_moves_king(board_state, piece_pos):
                 remove_list.add(pair)
 
     out = [x for x in out if not (x in remove_list)]
-    out = [x for x in out if not (x in get_pos_where_check(board_state, piece_pos))]
     return out
