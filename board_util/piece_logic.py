@@ -1,4 +1,4 @@
-from .pawn_logic import get_available_moves_pawn, get_pawn_taking_moves, change_state_of_moved_pawns
+from .pawn_logic import get_available_moves_pawn, get_pawn_taking_moves, change_state_of_moved_pawns, get_pawn_taking_moves_in_every_case
 from .rook_logic import get_available_moves_rook
 from .bishop_logic import get_available_moves_bishop
 from .queen_logic import get_available_moves_queen
@@ -7,7 +7,7 @@ from .king_logic import get_available_moves_king
 from .king_pos import find_king_pos
 import copy
 
-def get_opp_moves(board_state, piece_pos):
+def get_opp_moves(board_state, piece_pos): # piece pos is king
     out = []
     temp_king = board_state[piece_pos[0]][piece_pos[1]]
     board_state[piece_pos[0]][piece_pos[1]] = None
@@ -18,10 +18,7 @@ def get_opp_moves(board_state, piece_pos):
                 opp_piece = board_state[i][j][1]
                 pos = (i, j)
                 if opp_piece == 'p':
-                    #moves = get_available_moves_pawn(board_state, pos)
                     moves = get_pawn_taking_moves(board_state, pos)
-                    #if len(moves)> 1:
-                    #    print(opp_piece, board_state[i][j][0], moves)
                 elif opp_piece == 'q':
                     moves = get_available_moves_queen(board_state, pos)
                 elif opp_piece == 'r':
@@ -36,7 +33,7 @@ def get_opp_moves(board_state, piece_pos):
     board_state[piece_pos[0]][piece_pos[1]] = temp_king
     return out
 
-def is_check(board_state, piece_pos):
+def is_check(board_state, piece_pos): # piece pos is king
     row = piece_pos[0]
     col = piece_pos[1]
     if board_state[row][col][1] == 'K':
@@ -51,6 +48,7 @@ def get_available_moves(board_state, piece_pos, are_pawns_moved):
     row = piece_pos[0]
     col = piece_pos[1]
     piece = board_state[row][col]
+    color = piece[0]
     out = []
     if piece:
         if piece[1] == 'p':
@@ -66,9 +64,9 @@ def get_available_moves(board_state, piece_pos, are_pawns_moved):
         if piece[1] == 'K':
             out = get_available_moves_king(board_state, piece_pos)
             out = [x for x in out if not (x in get_opp_moves(board_state, piece_pos))]
+            out = [x for x in out if not (x in get_pawn_taking_moves_in_every_case(board_state, color))]
 
         if piece[1] != 'K': # filter the that make king in check possition
-            color = piece[0]
             king_pos = find_king_pos(board_state, color)
             out_filtered = []
             for pair in out:
@@ -82,7 +80,6 @@ def get_available_moves(board_state, piece_pos, are_pawns_moved):
                 del temp_board
             return out_filtered
         else:
-            color = piece[0]
             out_filtered = []
             for pair in out:
                 temp_board = copy.deepcopy(board_state)

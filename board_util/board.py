@@ -176,7 +176,7 @@ class Board:
         if (self.start_x <= x <= self.start_x + 8*CELL_WIDHT and
             self.start_y <= y <= self.start_y + 8*CELL_WIDHT): # is mouse on the board
 
-            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 row = (y - self.start_y) // CELL_WIDHT
                 col = (x - self.start_x) // CELL_WIDHT
 

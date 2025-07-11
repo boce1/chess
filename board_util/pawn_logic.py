@@ -1,4 +1,4 @@
-def get_pawn_taking_moves(board_state, piece_pos):
+def get_pawn_taking_moves(board_state, piece_pos): # gives the taking pos if only piece exists in that cell
     out = []
     row = piece_pos[0]
     col = piece_pos[1]
@@ -18,6 +18,29 @@ def get_pawn_taking_moves(board_state, piece_pos):
         if col < 7 and row < 7 and board_state[row+1][col+1]: # taking right
             if board_state[row+1][col+1][0] == 'w': 
                 out.append((row+1,col+1))
+    return out
+
+def get_pawn_taking_moves_in_every_case(board_state, king_color): # gives cell where king would be in check by pawns
+    taking_cells = set()
+    for i in range(8):
+        for j in range(8):
+            piece = board_state[i][j]
+            if piece and piece[1] == 'p':
+                if piece[0] == 'w' != king_color:
+                    taking_cells.add((i-1, j-1))
+                    taking_cells.add((i-1, j+1))
+                elif piece[0] == 'b' != king_color:
+                    taking_cells.add((i+1, j-1))
+                    taking_cells.add((i+1, j+1))
+    
+    remove_cells = set()
+    for pair in taking_cells:
+        if pair[0] < 0 or pair[0] > 7:
+            remove_cells.add(pair)
+        if pair[1] < 0 or pair[1] > 7:
+            remove_cells.add(pair)  
+    
+    out = taking_cells - remove_cells
     return out
 
 def get_available_moves_pawn(board_state, piece_pos, are_pawns_moved):
