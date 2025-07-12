@@ -48,6 +48,9 @@ class Board:
 
         # first 8 white, second 8 for black
         self.are_pawns_moved = [False for _ in range(16)]
+        # first 3 white - rook, king, rook
+        # second 3 black - rook, king, rook
+        self.are_kings_rook_moved = [False for _ in range(6)]
 
         self.y_promoting_rect = [self.start_y + 2*CELL_WIDHT + i*CELL_WIDHT for i in range(4)]
         self.x_promoting_rect_white = self.start_x + 8*CELL_WIDHT
@@ -79,7 +82,7 @@ class Board:
                 
                 if self.moving_cords and self.state[self.moving_cords[0]][self.moving_cords[1]]:
                     pygame.draw.rect(win, AVAILABLE_CELLS_COLOR, (self.start_x+self.moving_cords[1]*CELL_WIDHT, self.start_y+self.moving_cords[0]*CELL_WIDHT, CELL_WIDHT, CELL_WIDHT))
-                    for cords in get_available_moves(self.state, self.moving_cords, self.are_pawns_moved):
+                    for cords in get_available_moves(self.state, self.moving_cords, self.are_pawns_moved, self.are_kings_rook_moved):
                         pygame.draw.rect(win, AVAILABLE_CELLS_COLOR, (self.start_x + cords[1]*CELL_WIDHT+1, 
                                                                         self.start_y+ cords[0]*CELL_WIDHT+1,
                                                                             CELL_WIDHT-2, CELL_WIDHT-2), 2)
@@ -188,11 +191,12 @@ class Board:
                         self.promoting != 0): # black's turn but white selected
                         self.moving_cords = None
                 else:
-                    if (row, col) in get_available_moves(self.state, self.moving_cords, self.are_pawns_moved):
+                    if (row, col) in get_available_moves(self.state, self.moving_cords, self.are_pawns_moved, self.are_kings_rook_moved):
                         self.state[row][col] = self.state[self.moving_cords[0]][self.moving_cords[1]]
                         self.state[self.moving_cords[0]][self.moving_cords[1]] = None
                         
                         en_passant(self.state, (row, col)) # check for en passant
+                        king_castle(self.state, (row, col), self.are_kings_rook_moved)
                         self.turn = not self.turn
 
                         self.promoting = can_be_promoted(self.state, (row, col))
@@ -200,6 +204,7 @@ class Board:
                             self.promoting_cords = (row, col)
 
                         change_state_of_moved_pawns(self.state, self.are_pawns_moved)
+                        change_state_of_moved_kings_rooks(self.state, self.are_kings_rook_moved)
 
                     self.moving_cords = None
 

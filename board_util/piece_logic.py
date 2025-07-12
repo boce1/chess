@@ -3,7 +3,7 @@ from .rook_logic import get_available_moves_rook
 from .bishop_logic import get_available_moves_bishop
 from .queen_logic import get_available_moves_queen
 from .knight_logic import get_available_moves_knight
-from .king_logic import get_available_moves_king
+from .king_logic import get_available_moves_king, get_available_moves_castle, change_state_of_moved_kings_rooks, king_castle
 from .king_pos import find_king_pos
 import copy
 
@@ -44,7 +44,7 @@ def is_check(board_state, piece_pos): # piece pos is king
         raise "The piece is not king!"
 
 
-def get_available_moves(board_state, piece_pos, are_pawns_moved):
+def get_available_moves(board_state, piece_pos, are_pawns_moved, are_kings_rook_moved):
     row = piece_pos[0]
     col = piece_pos[1]
     piece = board_state[row][col]
@@ -66,7 +66,23 @@ def get_available_moves(board_state, piece_pos, are_pawns_moved):
             out = [x for x in out if not (x in get_opp_moves(board_state, piece_pos))]
             out = [x for x in out if not (x in get_pawn_taking_moves_in_every_case(board_state, color))]
 
-        if piece[1] != 'K': # filter the that make king in check possition
+            if not is_check(board_state, piece_pos): # castle if not chekc
+                castle_pos = get_available_moves_castle(board_state, piece_pos, out, are_kings_rook_moved)
+
+                out_remove = set()
+                for pair in castle_pos: # ckeck if is check in cell that is further away from king
+                    temp_board = copy.deepcopy(board_state)
+                    temp_piece = temp_board[row][col]
+                    temp_board[row][col] = None
+                    temp_board[pair[0]][pair[1]] = temp_piece
+
+                    if is_check(temp_board, pair):
+                        out_remove.add(pair)
+                
+                castle_pos = [x for x in castle_pos if not (x in out_remove)]
+                out.extend(castle_pos)
+
+        if piece[1] != 'K': # filter moves that make king in check possition
             king_pos = find_king_pos(board_state, color)
             out_filtered = []
             for pair in out:
@@ -79,7 +95,7 @@ def get_available_moves(board_state, piece_pos, are_pawns_moved):
                     out_filtered.append(pair)
                 del temp_board
             return out_filtered
-        else:
+        else: # filter moves that king takes defended pieces
             out_filtered = []
             for pair in out:
                 temp_board = copy.deepcopy(board_state)
