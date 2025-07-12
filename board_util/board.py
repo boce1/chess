@@ -68,17 +68,6 @@ class Board:
             ['wr', 'wk', 'wb', 'wq', 'wK','wb', 'wk', 'wr']
         ]
 
-        self.state = [
-            ['br', 'bk', 'bb', 'bq', 'bK','bb', 'bk', 'br'],
-            ['bp', None, 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
-            [None, None, 'bp', None, None, None, None, None],
-            [None for _ in range(8)],
-            [None for _ in range(8)],
-            [None for _ in range(8)],
-            ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
-            ['wr', 'wk', 'wb', 'wq', 'wK','wb', 'wk', 'wr']
-        ]
-
     def draw_frame(self, win):
         for i in range(8):
             for j in range(8):
