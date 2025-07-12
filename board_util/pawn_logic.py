@@ -63,7 +63,7 @@ def get_available_moves_pawn(board_state, piece_pos, are_pawns_moved):
                 if board_state[row][col+1][0] == 'b' and board_state[row][col+1][1] == 'p':
                     out.append((row-1,col+1))
 
-    elif color == 'b' and not are_pawns_moved[8 + col]: # for black pieces
+    elif color == 'b': # for black pieces
         if row < 7 and not board_state[row + 1][col]: # move forward one place
             out.append((row + 1, col))
         if row == 1 and not board_state[row+2][col] and not board_state[row+1][col]: # at the beggining 
@@ -84,6 +84,9 @@ def get_available_moves_pawn(board_state, piece_pos, are_pawns_moved):
             pawn_taking_lst.remove(pair)
 
     out.extend(pawn_taking_lst)
+
+    if len(out) == 0:
+        board_state[row][col] == None
     return out
 
 def en_passant(board_state, piece_pos):
