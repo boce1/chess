@@ -51,7 +51,7 @@ def get_available_moves_pawn(board_state, piece_pos, are_pawns_moved):
     if color == 'w':
         if row > 0 and not board_state[row - 1][col]: # move forward one place
             out.append((row - 1, col))
-        if row == 6 and not board_state[row-2][col]: # at the beggining
+        if row == 6 and not board_state[row-2][col] and not board_state[row-1][col]: # at the beggining
             out.append((row - 2, col))
 
         if row == 3: # en passant
@@ -66,7 +66,7 @@ def get_available_moves_pawn(board_state, piece_pos, are_pawns_moved):
     elif color == 'b' and not are_pawns_moved[8 + col]: # for black pieces
         if row < 7 and not board_state[row + 1][col]: # move forward one place
             out.append((row + 1, col))
-        if row == 1 and not board_state[row+2][col]: # at the beggining 
+        if row == 1 and not board_state[row+2][col] and not board_state[row+1][col]: # at the beggining 
             out.append((row + 2, col))
 
         if row == 4: # en passant
