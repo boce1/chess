@@ -30,6 +30,7 @@ def get_opp_moves(board_state, piece_pos): # piece pos is king
                 else:
                     moves = []
                 out.extend(set(moves))
+                out.extend(get_pawn_taking_moves_in_every_case(board_state, temp_king[0]))
     board_state[piece_pos[0]][piece_pos[1]] = temp_king
     return out
 

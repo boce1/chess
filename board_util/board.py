@@ -46,7 +46,7 @@ class Board:
         self.promoting = 0 # 0 for no promoting a pawn, 1 for white promoting, 2 for black promoting
         self.promoting_cords = None
 
-        # first 8 white, second 8 for black
+        # first 8 black, second 8 for white / if pawn are moved one place forward
         self.are_pawns_moved = [False for _ in range(16)]
         # first 3 white - rook, king, rook
         # second 3 black - rook, king, rook
@@ -165,7 +165,7 @@ class Board:
                         event.type == pygame.MOUSEBUTTONUP and event.button == 1):
                 index = (y - self.y_promoting_rect[0]) // CELL_WIDHT
         
-        if index != None:
+        if index != None and self.promoting != 0:
             promoting_pieces = get_promotable_pieces(self.state, self.promoting_cords)
             if promoting_pieces:
                 promoting_piece = promoting_pieces[index]
