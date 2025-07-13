@@ -14,10 +14,12 @@ import os
 
 class Board:
     def __init__(self):
+        # ui part
+        pygame.font.init()
+        font = pygame.font.SysFont('Consolas', CELL_WIDHT // 3)
+
         self.start_x = WIDTH // 2 - 4 * CELL_WIDHT
         self.start_y = HEIGHT // 2 - 4 * CELL_WIDHT
-
-        self.initialize()
 
         base_path = os.path.dirname(os.path.abspath(__file__))
         pics_path = os.path.join(base_path, 'pics')
@@ -39,6 +41,16 @@ class Board:
 
         self.white_pawn = pygame.transform.scale(pygame.image.load(os.path.join(pics_path, 'white', 'pawn.png')), (CELL_WIDHT, CELL_WIDHT))
         self.black_pawn = pygame.transform.scale(pygame.image.load(os.path.join(pics_path, 'black', 'pawn.png')), (CELL_WIDHT, CELL_WIDHT))
+
+        self.white_turn_msg = font.render('White\'s turn', True, BLACK)
+        self.black_turn_msg = font.render('Black\'s turn', True, BLACK)
+        self.white_msg_x = WIDTH // 2 - self.white_turn_msg.get_width() // 2
+        self.black_msg_x = WIDTH // 2 - self.black_turn_msg.get_width() // 2
+        self.msg_y = self.start_y - self.white_turn_msg.get_height() - 2
+        # # #
+
+        # logic part
+        self.initialize()
 
         self.moving_cords = None
 
@@ -141,6 +153,24 @@ class Board:
                         elif piece[1] == 'K':
                             win.blit(self.black_king, (self.start_x + col*CELL_WIDHT, self.start_y + row*CELL_WIDHT))
 
+    def desplay_msg_for_turn(self, win):
+        if self.turn:
+            win.blit(self.black_turn_msg, (self.black_msg_x, self.msg_y))
+        else:
+            win.blit(self.white_turn_msg, (self.white_msg_x, self.msg_y))
+
+    def end(self):
+        if is_white_in_checkmate(self.state):
+            print("Black has won")
+        elif is_black_in_checkmate(self.state):
+            print("White has won")
+        elif is_white_in_stalemate(self.state, self.are_pawns_moved, self.are_kings_rook_moved, self.permission_for_en_passant):
+            print("Draw by white stalemate")
+        elif is_black_in_stalemate(self.state, self.are_pawns_moved, self.are_kings_rook_moved, self.permission_for_en_passant):
+            print("Draw by black stalemate")
+        elif is_draw(self.state):
+            print("Draw")
+
     def promoting_choice_rect(self, win):
         if self.promoting == 1:
             pygame.draw.rect(win, BLACK, (self.x_promoting_rect_white, self.y_promoting_rect[0], CELL_WIDHT, 4*CELL_WIDHT))
@@ -214,6 +244,7 @@ class Board:
     def draw(self, win):
         self.draw_frame(win)
         self.draw_pieces(win)
+        self.desplay_msg_for_turn(win)
         self.promoting_choice_rect(win)
-
+        self.end()
         

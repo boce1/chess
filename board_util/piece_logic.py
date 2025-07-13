@@ -110,4 +110,86 @@ def get_available_moves(board_state, piece_pos, are_pawns_moved, are_kings_rook_
             return out_filtered
 
     return out 
-           
+
+def is_white_in_checkmate(board_state):
+    white_king_pos = find_king_pos(board_state, 'w')
+    # No need for:  are_pawns_moved, are_kings_rook_moved, permission_for_en_passant
+    if (is_check(board_state, white_king_pos) and
+        len(get_available_moves(board_state, white_king_pos, None, None, None)) == 0):
+        return True
+    return False
+
+def is_black_in_checkmate(board_state):
+    black_king_pos = find_king_pos(board_state, 'b')
+    # No need for:  are_pawns_moved, are_kings_rook_moved, permission_for_en_passant
+    if (is_check(board_state, black_king_pos) and 
+        len(get_available_moves(board_state, black_king_pos, None, None, None)) == 0):
+        return True
+    return False
+
+def is_white_in_stalemate(board_state, are_pawns_moved, are_kings_rook_moved, permission_for_en_passant):
+    white_king_pos = find_king_pos(board_state, 'w')
+    available_moves = 0
+    for i in range(8):
+        for j in range(8):
+            piece = board_state[i][j]
+            if piece and piece[0] == 'w':
+                available_moves += len(get_available_moves(board_state, (i, j), are_pawns_moved, are_kings_rook_moved, permission_for_en_passant))
+
+    if (not is_check(board_state, white_king_pos) and
+        available_moves == 0):
+        return True
+    return False
+
+def is_black_in_stalemate(board_state, are_pawns_moved, are_kings_rook_moved, permission_for_en_passant):
+    black_king_pos = find_king_pos(board_state, 'b')
+    available_moves = 0
+    for i in range(8):
+        for j in range(8):
+            piece = board_state[i][j]
+            if piece and piece[0] == 'b':
+                available_moves += len(get_available_moves(board_state, (i, j), are_pawns_moved, are_kings_rook_moved, permission_for_en_passant))
+
+    if (not is_check(board_state, black_king_pos) and
+        available_moves == 0):
+        return True
+    return False
+
+def is_draw(board_state):
+    white_pieces = []
+    black_pieces = []
+
+    for i in range(8):
+        for j in range(8):
+            piece = board_state[i][j]
+            if piece:
+                if piece[0] == 'w':
+                    white_pieces.append(piece)
+                elif piece[0] == 'b':
+                    black_pieces.append(piece)
+
+    if len(white_pieces) == len(black_pieces) and white_pieces[0] == 'wK' and black_pieces[0] == 'bK':
+        return True
+    
+    if len(white_pieces) == 2 and len(black_pieces) == 1:
+        if 'wK' in white_pieces and 'wb' in white_pieces and 'bK' in black_pieces:
+            return True
+        if 'wK' in white_pieces and 'wk' in white_pieces and 'bK' in black_pieces:
+            return True
+        
+    if len(black_pieces) == 2 and len(white_pieces) == 1:
+        if 'bK' in black_pieces and 'bb' in black_pieces and 'wK' in white_pieces:
+            return True
+        if 'bK' in black_pieces and 'bk' in black_pieces and 'wK' in white_pieces:
+            return True
+        
+    if len(black_pieces) == 2 and len(white_pieces) == 2:
+        if 'bK' in black_pieces and 'bb' in black_pieces and 'wK' in white_pieces and 'wb' in white_pieces:
+            bishops_pos = []
+            for i in range(8): # find bishops
+                for j in range(8):
+                    if board_state[i][j] and board_state[i][j][1] == 'b':
+                        bishops_pos.append((i, j))
+            if sum(bishops_pos[0]) % 2 == sum(bishops_pos[1]) % 2:
+                return True
+    return False
