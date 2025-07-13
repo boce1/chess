@@ -43,7 +43,7 @@ def get_pawn_taking_moves_in_every_case(board_state, king_color): # gives cell w
     out = taking_cells - remove_cells
     return out
 
-def get_available_moves_pawn(board_state, piece_pos, are_pawns_moved):
+def get_available_moves_pawn(board_state, piece_pos, are_pawns_moved, permission_for_en_passant):
     out = []
     row = piece_pos[0]
     col = piece_pos[1]
@@ -55,11 +55,11 @@ def get_available_moves_pawn(board_state, piece_pos, are_pawns_moved):
             out.append((row - 2, col))
 
         if row == 3: # en passant
-            if col > 0 and board_state[row][col-1] and not are_pawns_moved[col-1]:
+            if col > 0 and board_state[row][col-1] and not are_pawns_moved[col-1] and permission_for_en_passant[2*col]:
                 if board_state[row][col-1][0] == 'b' and board_state[row][col-1][1] == 'p':
                     out.append((row-1,col-1))
             
-            if col < 7 and board_state[row][col+1] and not are_pawns_moved[col+1]:
+            if col < 7 and board_state[row][col+1] and not are_pawns_moved[col+1] and permission_for_en_passant[2*col+1]:
                 if board_state[row][col+1][0] == 'b' and board_state[row][col+1][1] == 'p':
                     out.append((row-1,col+1))
 
@@ -70,11 +70,11 @@ def get_available_moves_pawn(board_state, piece_pos, are_pawns_moved):
             out.append((row + 2, col))
 
         if row == 4: # en passant
-            if col > 0 and board_state[row][col-1] and not are_pawns_moved[col-1]:
+            if col > 0 and board_state[row][col-1] and not are_pawns_moved[8+col-1] and permission_for_en_passant[16+2*col]:
                 if board_state[row][col-1][0] == 'w' and board_state[row][col-1][1] == 'p':
                     out.append((row+1,col-1))
             
-            if col < 7 and board_state[row][col+1] and not are_pawns_moved[col+1]:
+            if col < 7 and board_state[row][col+1] and not are_pawns_moved[8+col+1] and permission_for_en_passant[16+2*col+1]:
                 if board_state[row][col+1][0] == 'w' and board_state[row][col+1][1] == 'p':
                     out.append((row+1,col+1))
     
@@ -135,3 +135,38 @@ def change_state_of_moved_pawns(board_state, are_pawns_moved):
         if board_state[5][i] == 'wp':
             are_pawns_moved[8 + i] = True
       
+def change_permission_for_en_passant(board_state, permission_for_en_passant, are_pawns_moved, turn):
+    '''
+    permission_for_en_passant is array with 32 bools
+    first 16 white, second 16 black
+    every pawn has pair of 2 bools, for left and right en passant
+
+    turn- False for white, True for black
+    '''
+    for i in range(8):
+        for j in range(8):
+            piece = board_state[i][j]
+
+            if piece and piece[1] == 'p':  
+                if piece[0] == 'w':
+                    if (permission_for_en_passant[2*j] and i == 3 and 
+                        (i-1, j-1) in get_available_moves_pawn(board_state, (i,j), are_pawns_moved, permission_for_en_passant) and
+                        j > 0 and board_state[i][j-1] and board_state[i][j-1][1] == 'p' and not turn):
+                        permission_for_en_passant[2*j] = False
+                        
+                    if (permission_for_en_passant[2*j+1] and i == 3 and
+                        (i-1, j+1) in get_available_moves_pawn(board_state, (i,j), are_pawns_moved, permission_for_en_passant) and
+                        j < 7 and board_state[i][j+1] and board_state[i][j+1][1] == 'p' and not turn):
+                        permission_for_en_passant[2*j+1] = False
+
+                elif piece[0] == 'b':
+                    if (permission_for_en_passant[16+2*j] and i == 4 and 
+                        (i+1, j-1) in get_available_moves_pawn(board_state, (i,j), are_pawns_moved, permission_for_en_passant) and
+                        j > 0 and board_state[i][j-1] and board_state[i][j-1][1] == 'p' and turn):
+                        permission_for_en_passant[16+2*j] = False
+                        
+                    if (permission_for_en_passant[16+2*j+1] and i == 4 and
+                        (i+1, j+1) in get_available_moves_pawn(board_state, (i,j), are_pawns_moved, permission_for_en_passant) and
+                        j < 7 and board_state[i][j+1] and board_state[i][j+1][1] == 'p' and turn):
+                        permission_for_en_passant[16+2*j+1] = False
+
